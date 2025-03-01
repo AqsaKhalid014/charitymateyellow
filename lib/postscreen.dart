@@ -30,7 +30,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pick an Image')),
+      appBar: AppBar(title: Text('Pick  Image')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
