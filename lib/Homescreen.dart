@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,12 @@ import 'package:sahara_homepage/Donationscreens.dart';
 import 'functions.dart';
 
 class Homepage extends StatelessWidget {
-  const Homepage({super.key});
+  
+  const Homepage({super.key
+  });
 
   @override
+  
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
@@ -74,26 +79,30 @@ class Homepage extends StatelessWidget {
             Row(children: [
               Spacer(),
               functions.container(Icons.fastfood, Colors.orange, ' Food', () {
+                File? _image; // Declare _image in Homepage class
+
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => donateitemscreen()));
+                        builder: (context) => donateitemscreen(image:_image!, name:"" , location: '',description: "",)));
               }),
               Spacer(),
               functions.container(
                   Icons.monetization_on_outlined, Colors.orange, ' Money', () {
+                File? _image;
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => donatemoneyscreen()));
+                        builder: (context) => donatemoneyscreen(image:_image! , name: '', location: '', description: '')));
               }),
               Spacer(),
               functions.container(
                   Icons.cyclone_outlined, Colors.orange, 'Clothing', () {
+                File? _image;
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => donateclothscreen()));
+                        builder: (context) => donateclothscreen(image:_image! , name: '', location: '', description: '')));
               }),
               Spacer(),
             ]),
@@ -104,25 +113,27 @@ class Homepage extends StatelessWidget {
               Spacer(),
               functions.container(
                   Icons.menu_book_rounded, Colors.orange, ' Education', () {
+                File? _image;
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => donatestationaryscreen()));
+                        builder: (context) => donatestationaryscreen(image:_image! , name: '', location: '', description: '')));
               }),
               Spacer(),
               functions.container(
                   Icons.medical_information_outlined, Colors.orange, 'Medical',
                   () {
+                    File? _image;
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => donatemedicalitems()));
+                        builder: (context) => donatemedicalitems(image: _image!, name: '', location: '', description: '')));
               }),
               Spacer(),
               functions.container(Icons.devices_other, Colors.orange, 'Other',
-                  () {
+                  () {File? _image;
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => otherdonation()));
+                    MaterialPageRoute(builder: (context) => otherdonation(image:_image!, name: '', location: '', description: '')));
               }),
               Spacer(),
             ]),
