@@ -16,7 +16,8 @@ class functions {
           width: 100,
           height: 100,
           decoration: BoxDecoration(
-              color: Colors.white70, borderRadius: BorderRadius.circular(10)),
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(50)),
           child: Column(
             children: [
               Spacer(),
