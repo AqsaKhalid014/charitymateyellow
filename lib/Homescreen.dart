@@ -14,7 +14,7 @@ class Homepage extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.orange.shade100,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(130),
+          preferredSize: Size.fromHeight(90),
           child: Container(
             height: 130,
             width: double.infinity,
@@ -33,7 +33,7 @@ class Homepage extends StatelessWidget {
                   CircleAvatar(
                     backgroundImage:
                         AssetImage('assets/images/logo image.jpeg'),
-                    radius: 40,
+                    radius: 30,
                   ),
                   Text(
                     'CHARITY MATE',
@@ -62,7 +62,7 @@ class Homepage extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
-                height: 350,
+                height: 300,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.orange.shade100,
@@ -82,14 +82,14 @@ class Homepage extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(5),
                       color: Colors.orange
                           .withOpacity(0.5), // Semi-transparent background
                       child: Text(
-                        'Give a little, help a lot – your donation can change a life!" 💙',
+                        'Give a little, help a lot – your donation can change a life! 💙',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -101,169 +101,232 @@ class Homepage extends StatelessWidget {
             height: 5,
           ),
           Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(30), bottom: Radius.circular(2))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  '      Categories:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(children: [
-                  Spacer(),
-                  functions.container(
-                      Icons.fastfood, Colors.orange.shade400, ' Food', () {
-                    File? _image; // Declare _image in Homepage class
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(30), bottom: Radius.circular(2))),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      '      Categories:',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(children: [
+                      Spacer(),
+                      functions.container(
+                          Icons.fastfood, Colors.orange.shade400, ' Food', () {
+                        File? _image;
+                        if (_image == null) {
+                          print("Image is null, please select an image");
+                          return;
+                        }
 
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => donateitemscreen(
-                                  image: _image!,
-                                  name: "",
-                                  location: '',
-                                  description: "",
-                                )));
-                  }),
-                  Spacer(),
-                  functions.container(Icons.monetization_on_outlined,
-                      Colors.orange.shade400, ' Money', () {
-                    File? _image;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => donatemoneyscreen(
-                                image: _image!,
-                                name: '',
-                                location: '',
-                                description: '')));
-                  }),
-                  Spacer(),
-                  functions.container(Icons.cyclone_outlined,
-                      Colors.orange.shade400, 'Clothing', () {
-                    File? _image;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => donateclothscreen(
-                                image: _image!,
-                                name: '',
-                                location: '',
-                                description: '')));
-                  }),
-                  Spacer(),
-                ]),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(children: [
-                  Spacer(),
-                  functions.container(Icons.menu_book_rounded,
-                      Colors.orange.shade400, ' Education', () {
-                    File? _image;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => donatestationaryscreen(
-                                image: _image!,
-                                name: '',
-                                location: '',
-                                description: '')));
-                  }),
-                  Spacer(),
-                  functions.container(Icons.medical_information_outlined,
-                      Colors.orange.shade400, 'Medical', () {
-                    File? _image;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => donatemedicalitems(
-                                image: _image!,
-                                name: '',
-                                location: '',
-                                description: '')));
-                  }),
-                  Spacer(),
-                  functions.container(
-                      Icons.devices_other, Colors.orange.shade400, 'Other', () {
-                    File? _image;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => otherdonation(
-                                image: _image!,
-                                name: '',
-                                location: '',
-                                description: '')));
-                  }),
-                  Spacer(),
-                ]),
-                SizedBox(
-                  height: 12,
-                ),
-                Text(
-                  '      Start your donation journey:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CarouselSlider(
-                  options: CarouselOptions(
-                      height: 200, autoPlay: true, enlargeCenterPage: true),
-                  items: [
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                  ]
-                      .map((item) => Container(
-                            margin: EdgeInsets.all(5.0),
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              child: Image.network(item,
-                                  fit: BoxFit.cover, width: 600.0),
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => donateitemscreen(
+                                      image: _image!,
+                                      name: "",
+                                      location: '',
+                                      description: "",
+                                    )));
+                      }),
+                      Spacer(),
+                      functions.container(Icons.monetization_on_outlined,
+                          Colors.orange.shade400, ' Money', () {
+                        File? _image;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => donatemoneyscreen(
+                                    image: _image!,
+                                    name: '',
+                                    location: '',
+                                    description: '')));
+                      }),
+                      Spacer(),
+                      functions.container(Icons.cyclone_outlined,
+                          Colors.orange.shade400, 'Clothing', () {
+                        File? _image;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => donateclothscreen(
+                                    image: _image!,
+                                    name: '',
+                                    location: '',
+                                    description: '')));
+                      }),
+                      Spacer(),
+                    ]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(children: [
+                      Spacer(),
+                      functions.container(Icons.menu_book_rounded,
+                          Colors.orange.shade400, ' Education', () {
+                        File? _image;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => donatestationaryscreen(
+                                    image: _image!,
+                                    name: '',
+                                    location: '',
+                                    description: '')));
+                      }),
+                      Spacer(),
+                      functions.container(Icons.medical_information_outlined,
+                          Colors.orange.shade400, 'Medical', () {
+                        File? _image;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => donatemedicalitems(
+                                    image: _image!,
+                                    name: '',
+                                    location: '',
+                                    description: '')));
+                      }),
+                      Spacer(),
+                      functions.container(
+                          Icons.devices_other, Colors.orange.shade400, 'Other',
+                          () {
+                        File? _image;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => otherdonation(
+                                    image: _image!,
+                                    name: '',
+                                    location: '',
+                                    description: '')));
+                      }),
+                      Spacer(),
+                    ]),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      color: Colors.grey.shade400,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Welcome savings up to',
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
                             ),
-                          ))
-                      .toList(),
-                ),
-              ],
-            ),
-          )
+                            Text(
+                              '205 AED for you !',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Row(
+                              children: [
+                                functions.colorful_container(
+                                  Colors.pinkAccent.shade700,
+                                  'Up to',
+                                  ' 45 AED',
+                                  'on your first 3 orders',
+                                  "FOOD",
+                                  Colors.white70,
+                                  Colors.white70,
+                                  Colors.white70,
+                                  Colors.white70,
+                                ),
+                                Text(
+                                  '+',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                functions.colorful_container(
+                                  Colors.red.shade800,
+                                  'Up to',
+                                  ' 60 AED',
+                                  'on your first 3 orders',
+                                  "MINUTES",
+                                  Colors.white70,
+                                  Colors.white70,
+                                  Colors.white70,
+                                  Colors.white70,
+                                ),
+                                Text(
+                                  '+',
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                functions.colorful_container(
+                                  Colors.yellow,
+                                  'Up to',
+                                  '100 AED',
+                                  'on your first order',
+                                  "noon",
+                                  Colors.black,
+                                  Colors.black,
+                                  Colors.black,
+                                  Colors.black,
+                                ),
+                              ],
+                            ),
+                            functions
+                                .wideaddcontainer('assets/images/ads1.jfif'),
+                            functions
+                                .wideaddcontainer('assets/images/ads 2.jfif'),
+                            functions
+                                .wideaddcontainer('assets/images/ads3.jfif'),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      '      Start your donation journey:',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CarouselSlider(
+                      options: CarouselOptions(
+                          height: 200, autoPlay: true, enlargeCenterPage: true),
+                      items: [
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
+                      ]
+                          .map((item) => Container(
+                                margin: EdgeInsets.all(5.0),
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15.0)),
+                                  child: Image.network(item,
+                                      fit: BoxFit.cover, width: 600.0),
+                                ),
+                              ))
+                          .toList(),
+                    )
+                  ])),
         ])));
   }
 }
-/*  CarouselSlider(
-              options: CarouselOptions(
-                  height: 200, autoPlay: true, enlargeCenterPage: true),
-              items: [
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
-              ]
-                  .map((item) => Container(
-                        margin: EdgeInsets.all(5.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          child: Image.network(item,
-                              fit: BoxFit.cover, width: 600.0),
-                        ),
-                      ))
-                  .toList(),
-            ),*/

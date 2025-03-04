@@ -29,15 +29,15 @@ class _ProfileState extends State<Profilescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.orange.shade50,
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              height: 290,
+              height: 166,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.teal,
+                color: Colors.orange.shade300,
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
@@ -45,41 +45,23 @@ class _ProfileState extends State<Profilescreen> {
               ),
               child: Column(
                 children: [
-                  const SizedBox(height: 40),
-                  Row(
-                    children: [
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => profilemorescreen(),
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                  const CircleAvatar(
-                    radius: 65,
-                    // backgroundImage: AssetImage('assets/profile_pic.png'),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    userName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white,
+                  SizedBox(height: 20),
+                  CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.grey.shade300,
+                    child: Text(
+                      'BA',
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  SizedBox(height: 10),
+                  Text(
+                    'CHARITY MATE',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  Text('amjadbisma68@gmail.com'),
+                  SizedBox(height: 15),
                 ],
               ),
             ),
@@ -148,6 +130,14 @@ class _ProfileState extends State<Profilescreen> {
                         trailing: Icon(Icons.arrow_forward_ios_sharp),
                         title: Text('Terms & Conditions'),
                         leading: Icon(Icons.terminal_sharp),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: ListTile(
+                        trailing: Icon(Icons.arrow_forward_ios_sharp),
+                        title: Text('More'),
+                        leading: Icon(Icons.more_vert_outlined),
                       ),
                     ),
                   ],
