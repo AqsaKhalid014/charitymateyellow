@@ -101,21 +101,12 @@ class functions {
         });
   }
 
-  static colorful_container(
-      Color color,
-      String text1,
-      String text2,
-      String text3,
-      String text4,
-      Color coloroftext,
-      Color coloroftext1,
-      Color coloroftext2,
-      Color coloroftext4) {
+  static colorful_container(Color color, String text4, Color coloroftext4) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Container(
         height: 170,
-        width: 100,
+        width: 110,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: color,
@@ -125,44 +116,32 @@ class functions {
             SizedBox(
               height: 10,
             ),
-            Text(
-              text1,
-              style: TextStyle(
-                  color: coloroftext,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15),
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(9.0),
+              child: Text(
+                text4,
+                style: TextStyle(
+                    color: coloroftext4,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10),
+              ),
             ),
-            Text(
-              text2,
-              style: TextStyle(
-                  color: coloroftext1,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 19),
-            ),
-            Text(
-              text3,
-              style: TextStyle(
-                  color: coloroftext2,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 10),
-            ),
-            TextButton(
-                onPressed: () {
-                  TextButton.styleFrom(backgroundColor: Colors.black);
-                },
-                child: Text(
-                  'SHOP NOW',
-                  style: TextStyle(
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: ElevatedButton(
+                  onPressed: () {
+                    TextButton.styleFrom(backgroundColor: Colors.black);
+                  },
+                  child: Text(
+                    'DONATE ',
+                    style: TextStyle(
                       color: Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold),
-                )),
-            Text(
-              text4,
-              style: TextStyle(
-                  color: coloroftext4,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                  )),
             ),
             SizedBox(
               height: 10,

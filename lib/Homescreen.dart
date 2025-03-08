@@ -26,7 +26,7 @@ class Homepage extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,9 +60,9 @@ class Homepage extends StatelessWidget {
         body: SingleChildScrollView(
             child: Column(children: [
           Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: Container(
-                height: 300,
+                height: 210,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.orange.shade100,
@@ -78,7 +78,7 @@ class Homepage extends StatelessWidget {
                         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnN1YYQEf27aqIgiJSDWhpgQYHV9JJPkRxdA&s',
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: 350,
+                        height: 250,
                       ),
                     ),
                     Container(
@@ -125,10 +125,6 @@ class Homepage extends StatelessWidget {
                       functions.container(
                           Icons.fastfood, Colors.orange.shade400, ' Food', () {
                         File? _image;
-                        if (_image == null) {
-                          print("Image is null, please select an image");
-                          return;
-                        }
 
                         Navigator.push(
                             context,
@@ -219,33 +215,28 @@ class Homepage extends StatelessWidget {
                     ),
                     Container(
                       width: double.infinity,
-                      color: Colors.grey.shade400,
+                      color: Colors.orange.shade50,
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Column(
                           children: [
                             Text(
-                              'Welcome savings up to',
+                              'Welcome to Charity Mate',
                               style: TextStyle(
                                   fontSize: 25, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              '205 AED for you !',
+                              'Start Your Donation Journey',
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Row(
                               children: [
+
                                 functions.colorful_container(
-                                  Colors.pinkAccent.shade700,
-                                  'Up to',
-                                  ' 45 AED',
-                                  'on your first 3 orders',
-                                  "FOOD",
-                                  Colors.white70,
-                                  Colors.white70,
-                                  Colors.white70,
-                                  Colors.white70,
+                                  Colors.orange.shade500,
+                                  "\nWe make a living by what we get, but we make a life by what we give.",
+                                  Colors.black,
                                 ),
                                 Text(
                                   '+',
@@ -254,15 +245,9 @@ class Homepage extends StatelessWidget {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 functions.colorful_container(
-                                  Colors.red.shade800,
-                                  'Up to',
-                                  ' 60 AED',
-                                  'on your first 3 orders',
-                                  "MINUTES",
-                                  Colors.white70,
-                                  Colors.white70,
-                                  Colors.white70,
-                                  Colors.white70,
+                                  Colors.pinkAccent.shade200,
+                                  "\nThe meaning of life is to find your gift. The purpose of life is to give it away.",
+                                  Colors.black,
                                 ),
                                 Text(
                                   '+',
@@ -272,23 +257,12 @@ class Homepage extends StatelessWidget {
                                 ),
                                 functions.colorful_container(
                                   Colors.yellow,
-                                  'Up to',
-                                  '100 AED',
-                                  'on your first order',
-                                  "noon",
-                                  Colors.black,
-                                  Colors.black,
-                                  Colors.black,
+                                  "Charity begins at home, but it should not end there.",
                                   Colors.black,
                                 ),
+
                               ],
                             ),
-                            functions
-                                .wideaddcontainer('assets/images/ads1.jfif'),
-                            functions
-                                .wideaddcontainer('assets/images/ads 2.jfif'),
-                            functions
-                                .wideaddcontainer('assets/images/ads3.jfif'),
                           ],
                         ),
                       ),
