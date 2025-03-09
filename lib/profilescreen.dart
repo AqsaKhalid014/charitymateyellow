@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sahara_homepage/profilemorescreen.dart';
+import 'package:sahara_homepage/about%20us%20screen.dart';
+import 'package:sahara_homepage/main.dart';
+import 'package:sahara_homepage/most%20asked%20question%20screen.dart';
+import 'package:sahara_homepage/privacy%20screen.dart';
+import 'package:sahara_homepage/morescreen.dart';
+import 'package:sahara_homepage/terms%20and%20condition%20screen.dart';
 
 class Profilescreen extends StatefulWidget {
   const Profilescreen({super.key});
@@ -34,7 +39,7 @@ class _ProfileState extends State<Profilescreen> {
         child: Column(
           children: [
             Container(
-              height: 166,
+              height: 120,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.orange.shade300,
@@ -44,29 +49,34 @@ class _ProfileState extends State<Profilescreen> {
                 ),
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20),
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.grey.shade300,
-                    child: Text(
-                      'BA',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  SizedBox(height: 40),
+                  Text(
+                    'CHARITY MATE',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    userName.isNotEmpty ? userName : "Guest", // Show name or Guest
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    'CHARITY MATE',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  Text('amjadbisma68@gmail.com'),
-                  SizedBox(height: 15),
+
                 ],
               ),
             ),
+
             SizedBox(
-              height: 25,
+              height: 15,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
@@ -79,11 +89,14 @@ class _ProfileState extends State<Profilescreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
+                      },
                       child: ListTile(
                         trailing: Icon(Icons.arrow_forward_ios_sharp),
-                        title: Text('Account'),
-                        leading: Icon(Icons.account_circle_outlined),
+                        title: Text('Home'),
+                        leading: Icon(Icons.home_sharp),
                       ),
                     ),
                   ],
@@ -101,43 +114,50 @@ class _ProfileState extends State<Profilescreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>AboutUsScreen()));
+
+                      },
                       child: ListTile(
                         trailing: Icon(Icons.arrow_forward_ios_sharp),
-                        title: Text('Notification'),
-                        leading: Icon(Icons.notifications_none),
+                        title: Text('About Us'),
+                        leading: Icon(Icons.read_more_outlined),
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>TermsAndConditionsScreen()));
+
+                      },
                       child: ListTile(
                         trailing: Icon(Icons.arrow_forward_ios_sharp),
-                        title: Text('Help & Support'),
-                        leading: Icon(Icons.help_outline_rounded),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios_sharp),
-                        title: Text('Send Feedback'),
-                        leading: Icon(Icons.feedback_outlined),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios_sharp),
-                        title: Text('Terms & Conditions'),
+                        title: Text('Terms and Conditions'),
                         leading: Icon(Icons.terminal_sharp),
                       ),
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>PrivacyScreen()));
+
+                      },
                       child: ListTile(
                         trailing: Icon(Icons.arrow_forward_ios_sharp),
-                        title: Text('More'),
-                        leading: Icon(Icons.more_vert_outlined),
+                        title: Text('Privacy Policy'),
+                        leading: Icon(Icons.privacy_tip_outlined),
+                      ),
+                    ),
+
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FAQScreen()));
+                      },
+                      child: ListTile(
+                        trailing: Icon(Icons.arrow_forward_ios_sharp),
+                        title: Text('FAQ'),
+                        leading: Icon(Icons.question_mark),
                       ),
                     ),
                   ],

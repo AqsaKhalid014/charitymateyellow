@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sahara_homepage/postscreen.dart';
 
 class functions {
   static container(
@@ -101,54 +102,5 @@ class functions {
         });
   }
 
-  static colorful_container(Color color, String text4, Color coloroftext4) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Container(
-        height: 170,
-        width: 110,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: color,
-        ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(9.0),
-              child: Text(
-                text4,
-                style: TextStyle(
-                    color: coloroftext4,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10),
-              ),
-            ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 7),
-              child: ElevatedButton(
-                  onPressed: () {
-                    TextButton.styleFrom(backgroundColor: Colors.black);
-                  },
-                  child: Text(
-                    'DONATE ',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 10,
-                    ),
-                  )),
-            ),
-            SizedBox(
-              height: 10,
-            )
-          ],
-        ),
-      ),
-    );
-  }
+
 }
