@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sahara_homepage/postscreen.dart';
 import 'package:sahara_homepage/splashscreen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'Homescreen.dart';
 import 'profilescreen.dart';
 import 'searchscreen.dart';
@@ -15,6 +16,10 @@ void main() async {
           appId: '1:129550855747:android:c824144550d988bee0eef6',
           messagingSenderId: "129550855747",
           projectId: "charitymate-bc611"));
+  await Supabase.initialize(
+    url: 'https://jmmnehvviqwrwrnnnenk.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImptbW5laHZ2aXF3cndybm5uZW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwMzUwNDAsImV4cCI6MjA1NzYxMTA0MH0.NkCDiFMitwD3k-yDn29dkuJfwXUN9qk2hG3ReEbntzQ',
+  );
   runApp(MyApp());
 }
 

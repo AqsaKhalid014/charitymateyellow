@@ -50,3 +50,4 @@ dependencies{
     implementation platform('com.google.firebase:firebase-bom:33.8.0')
 }
 }
+apply plugin: 'com.google.gms.google-services'

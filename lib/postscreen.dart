@@ -1,13 +1,19 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
+import "package:cloud_firestore/cloud_firestore.dart";
 import 'package:sahara_homepage/Donationscreens.dart';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 //import 'displayscreen.dart';
+
+
 
 class ImagePickerScreen extends StatefulWidget {
   @override
@@ -24,13 +30,88 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   List<String> _suggestions = [];
 
   Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        _image= File(pickedFile.path);
       });
     }
   }
+  Future<String> _uploadImageToSupabase(File imageFile) async {
+    try {
+      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      // Uploading the image
+      await Supabase.instance.client.storage
+          .from('user-enter-data')
+          .upload('$fileName.jpg', imageFile);
+
+      // Getting the public URL
+      final imageUrl = Supabase.instance.client.storage
+          .from('user-enter-data')
+          .getPublicUrl('$fileName.jpg');
+
+      return imageUrl;
+    } catch (e) {
+      print('Image upload error: $e');
+      return '';
+    }
+  }
+
+  Future<void> _submitData() async {
+    if (_image != null &&
+        _nameController.text.isNotEmpty &&
+        _locationController.text.isNotEmpty &&
+        _descriptionController.text.isNotEmpty) {
+
+      String imageUrl = await _uploadImageToSupabase(_image!);
+      if (imageUrl.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Image upload failed')),
+        );
+        return;
+      }
+
+      final response = await Supabase.instance.client.from('user-enter-data').insert({
+        'name': _nameController.text,
+        'location': _locationController.text,
+        'description': _descriptionController.text,
+        'image_url': imageUrl,
+        'created_at': DateTime.now().toIso8601String(),
+      });
+
+      if (response.error != null) {
+        print('Supabase insert error: ${response.error!.message}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Data upload failed')),
+        );
+      } else {
+        print("Data uploaded successfully to Supabase");
+        _showDonationTypeDialog();
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill all fields and select an image')),
+      );
+    }
+  }
+  /*Future<String> uploadImageToStorage(File imageFile) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference ref = FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+
+      // Upload the image
+      UploadTask uploadTask = ref.putFile(imageFile);
+      TaskSnapshot snapshot = await uploadTask;
+
+      // Get the download URL
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print(" Image upload error: $e");
+      return '';
+    }
+  }*/
 
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
@@ -157,21 +238,10 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                if (_image != null &&
-                    _nameController.text.isNotEmpty &&
-                    _locationController.text.isNotEmpty &&
-                    _descriptionController.text.isNotEmpty) {
-                  _showDonationTypeDialog(); // Show pop-up when submit is pressed
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(
-                        'Please fill all fields and select an image')),
-                  );
-                }
-              },
+              onPressed: _submitData,
               child: Text('Submit'),
             ),
+
 
           ],
         ),
@@ -194,6 +264,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     name: _nameController.text,
                     location: _locationController.text,
                     description: _descriptionController.text,
+                    isNewPost: true,
+
                   )),
               _buildDonationButton("Donate Money", () =>
                   donatemoneyscreen(
@@ -201,6 +273,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     name: _nameController.text,
                     location: _locationController.text,
                     description: _descriptionController.text,
+                    isNewPost: true,
+
                   )),
               _buildDonationButton("Donate Stationary", () =>
                   donatestationaryscreen(
@@ -208,6 +282,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     name: _nameController.text,
                     location: _locationController.text,
                     description: _descriptionController.text,
+                    isNewPost: true,
+
                   )),
               _buildDonationButton("Donate Cloth", () =>
                   donateclothscreen(
@@ -215,6 +291,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     name: _nameController.text,
                     location: _locationController.text,
                     description: _descriptionController.text,
+                    isNewPost: true,
                   )),
               _buildDonationButton("Donate Medical Items", () =>
                   donatemedicalitems(
@@ -222,6 +299,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     name: _nameController.text,
                     location: _locationController.text,
                     description: _descriptionController.text,
+                    isNewPost: true,
                   )),
               _buildDonationButton("Other Donation", () =>
                   otherdonation(
@@ -229,6 +307,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     name: _nameController.text,
                     location: _locationController.text,
                     description: _descriptionController.text,
+                    isNewPost:true,
                   )),
             ],
           ),
@@ -244,17 +323,36 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
       child: ElevatedButton(
         onPressed: () {
           Navigator.pop(context); // Close the dialog
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) =>
                   screenBuilder(), // Navigate to selected screen
             ),
           );
-        },
+          showThankYouDialog(context); // Show Thank You
+          },
         child: Text(label),
       ),
     );
   }
 
+}
+
+void showThankYouDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text("Thank You!"),
+      content: Text("Your donation has been submitted successfully."),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("Go to Home"),
+        ),
+      ],
+    ),
+  );
 }
