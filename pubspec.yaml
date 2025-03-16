@@ -51,7 +51,6 @@ dependencies:
   #flutter_google_places: ^0.3.0
   #google_api_headers: ^1.4.0
   http: ^0.13.6  # For API calls
-  firebase_ml_model_downloader:
   google_mlkit_translation:
 flutter_localizations:
 

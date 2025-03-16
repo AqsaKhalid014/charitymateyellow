@@ -193,22 +193,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.19.0"
-  firebase_ml_model_downloader:
-    dependency: "direct main"
-    description:
-      name: firebase_ml_model_downloader
-      sha256: "559059b071601db8cc0c294fdc31c67ad6e35898d25463b6f0cf02009a23e669"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.2+1"
-  firebase_ml_model_downloader_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_ml_model_downloader_platform_interface
-      sha256: "0213569b39f08859e3c6a5e1098eb8cc69c2c567dade061d622915c83597ef51"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.5+1"
   firebase_storage:
     dependency: "direct main"
     description:
