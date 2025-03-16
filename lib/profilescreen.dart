@@ -4,7 +4,6 @@ import 'package:sahara_homepage/about%20us%20screen.dart';
 import 'package:sahara_homepage/main.dart';
 import 'package:sahara_homepage/most%20asked%20question%20screen.dart';
 import 'package:sahara_homepage/privacy%20screen.dart';
-import 'package:sahara_homepage/morescreen.dart';
 import 'package:sahara_homepage/terms%20and%20condition%20screen.dart';
 
 class Profilescreen extends StatefulWidget {
@@ -15,7 +14,8 @@ class Profilescreen extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profilescreen> {
-  String userName = "Loading..."; // Default text before fetching username
+  String userName = "Loading...";
+  TextEditingController _nameController = TextEditingController();
 
   @override
   void initState() {
@@ -23,12 +23,32 @@ class _ProfileState extends State<Profilescreen> {
     _loadUsername();
   }
 
-  // Function to get the username from FirebaseAuth
   void _loadUsername() {
     User? user = FirebaseAuth.instance.currentUser;
     setState(() {
       userName = user?.displayName ?? "Unknown User";
+      _nameController.text = userName;
     });
+  }
+
+  Future<void> _updateUsername() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.updateDisplayName(_nameController.text);
+      await user.reload();
+      setState(() {
+        userName = _nameController.text;
+      });
+    }
+  }
+
+  Future<void> signOutUser() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Navigator.pushReplacementNamed(context, '/login');
+    } catch (e) {
+      print("Error signing out: $e");
+    }
   }
 
   @override
@@ -38,8 +58,8 @@ class _ProfileState extends State<Profilescreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+
             Container(
-              height: 120,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.orange.shade300,
@@ -48,58 +68,83 @@ class _ProfileState extends State<Profilescreen> {
                   bottomRight: Radius.circular(30),
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: 40),
-                  Text(
-                    'CHARITY MATE',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    userName.isNotEmpty ? userName : "Guest", // Show name or Guest
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 10),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                child: Column(
+                  children: [SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          radius: 35,
+                        backgroundImage: AssetImage('assets/images/logo zoom.jpg'),
+                          backgroundColor: Colors.white,
 
-                ],
+                          //child: Icon(Icons.person, size: 50, color: Colors.orange.shade300),
+                        ),
+                        SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '\n'
+                                  'CHARITY MATE',
+                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              userName,
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent.shade100),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Edit Name"),
+                                    content: TextField(controller: _nameController),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("Cancel"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          _updateUsername();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Save"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              child: Text('Edit Name'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-
-            SizedBox(
-              height: 15,
-            ),
+            SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage()));
-                      },
-                      child: ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios_sharp),
-                        title: Text('Home'),
-                        leading: Icon(Icons.home_sharp),
-                      ),
-                    ),
-                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: InkWell(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage())),
+                  child: ListTile(
+                    title: Text('Home'),
+                    leading: Icon(Icons.home_sharp,color: Colors.orangeAccent,),
+                  ),
                 ),
               ),
             ),
@@ -108,54 +153,35 @@ class _ProfileState extends State<Profilescreen> {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>AboutUsScreen()));
-
-                      },
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUsScreen())),
                       child: ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios_sharp),
                         title: Text('About Us'),
                         leading: Icon(Icons.read_more_outlined),
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>TermsAndConditionsScreen()));
-
-                      },
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TermsAndConditionsScreen())),
                       child: ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios_sharp),
                         title: Text('Terms and Conditions'),
                         leading: Icon(Icons.terminal_sharp),
                       ),
                     ),
                     InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>PrivacyScreen()));
-
-                      },
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyScreen())),
                       child: ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios_sharp),
                         title: Text('Privacy Policy'),
                         leading: Icon(Icons.privacy_tip_outlined),
                       ),
                     ),
-
                     InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => FAQScreen()));
-                      },
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FAQScreen())),
                       child: ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios_sharp),
                         title: Text('FAQ'),
                         leading: Icon(Icons.question_mark),
                       ),
@@ -169,20 +195,15 @@ class _ProfileState extends State<Profilescreen> {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        trailing: Icon(Icons.arrow_forward_ios_sharp),
-                        title: Text('Logout'),
-                        leading: Icon(Icons.logout),
-                      ),
-                    ),
-                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: InkWell(
+                  onTap: signOutUser,
+                  child: ListTile(
+                    title: Text('Logout'),
+                    leading: Icon(Icons.logout),
+                  ),
                 ),
               ),
             ),

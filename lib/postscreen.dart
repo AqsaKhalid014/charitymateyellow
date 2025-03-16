@@ -7,7 +7,6 @@ import 'package:sahara_homepage/Donationscreens.dart';
 import 'dart:convert';
 import 'dart:io';
 
-//import 'displayscreen.dart';
 
 class ImagePickerScreen extends StatefulWidget {
   @override

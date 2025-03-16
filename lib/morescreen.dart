@@ -7,7 +7,10 @@ class ProfileMoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('data'),),
+
+      appBar: AppBar(title: Text('more screen'),
+      backgroundColor: Colors.orangeAccent,
+      ),
     );
   }
 }
