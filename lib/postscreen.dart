@@ -8,8 +8,11 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import 'package:sahara_homepage/Donationscreens.dart';
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:typed_data';
+import 'package:path/path.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'donatemoney.dart';
 
 //import 'displayscreen.dart';
 
@@ -39,22 +42,25 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   }
   Future<String> _uploadImageToSupabase(File imageFile) async {
     try {
-      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-
+      //final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final SupabaseClient supabase = Supabase.instance.client;
+      // Convert File to Uint8List
+      Uint8List imageBytes = await imageFile.readAsBytes();
+      // Generate a unique file name
+      final String fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
       // Uploading the image
-      await Supabase.instance.client.storage
-          .from('user-enter-data')
-          .upload('$fileName.jpg', imageFile);
+      await supabase.storage.from('user-enter-data').uploadBinary(
+          fileName,  // File path in bucket
+          imageBytes, // Uint8List data
+          fileOptions: const FileOptions(cacheControl: '3600', upsert: false),
+      );
 
-      // Getting the public URL
-      final imageUrl = Supabase.instance.client.storage
-          .from('user-enter-data')
-          .getPublicUrl('$fileName.jpg');
-
+      // Get the public URL
+      final String imageUrl = supabase.storage.from('your_bucket_name').getPublicUrl(fileName);
       return imageUrl;
     } catch (e) {
       print('Image upload error: $e');
-      return '';
+      return "";
     }
   }
 
@@ -64,9 +70,9 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
         _locationController.text.isNotEmpty &&
         _descriptionController.text.isNotEmpty) {
 
-      String imageUrl = await _uploadImageToSupabase(_image!);
-      if (imageUrl.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
+      String? imageUrl = await _uploadImageToSupabase(_image!);
+      if (imageUrl == null || imageUrl.isEmpty) {
+        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
           SnackBar(content: Text('Image upload failed')),
         );
         return;
@@ -82,16 +88,16 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
       if (response.error != null) {
         print('Supabase insert error: ${response.error!.message}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Data upload failed')),
+        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+          const SnackBar(content: Text('Data upload failed')),
         );
       } else {
         print("Data uploaded successfully to Supabase");
-        _showDonationTypeDialog();
+        _showDonationTypeDialog(context as BuildContext);
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all fields and select an image')),
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields and select an image')),
       );
     }
   }
@@ -119,7 +125,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
         const SnackBar(content: Text(
             'Location services are disabled. Please enable them.')),
       );
@@ -130,7 +136,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
           const SnackBar(content: Text('Location permission denied')),
         );
         return;
@@ -138,7 +144,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
         const SnackBar(content: Text(
             'Location permissions are permanently denied. Enable them from settings.')),
       );
@@ -241,6 +247,26 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
               onPressed: _submitData,
               child: Text('Submit'),
             ),
+            SizedBox(height: 50),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orangeAccent,
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text(
+                'Donate Money',
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => MoneyDonationPage()),
+                );
+              },
+            ),
 
 
           ],
@@ -249,7 +275,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     );
   }
 
-  void _showDonationTypeDialog() {
+  void _showDonationTypeDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -322,15 +348,15 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: ElevatedButton(
         onPressed: () {
-          Navigator.pop(context); // Close the dialog
+          Navigator.pop(context as BuildContext); // Close the dialog
           Navigator.pushReplacement(
-            context,
+            context as BuildContext,
             MaterialPageRoute(
               builder: (context) =>
                   screenBuilder(), // Navigate to selected screen
             ),
           );
-          showThankYouDialog(context); // Show Thank You
+          showThankYouDialog(context as BuildContext); // Show Thank You
           },
         child: Text(label),
       ),
