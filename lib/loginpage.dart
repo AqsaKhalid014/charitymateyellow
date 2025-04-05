@@ -38,7 +38,7 @@ class _loginPageState extends State<loginPage> {
       if (googleUser == null) return; // User canceled login
 
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -77,7 +77,7 @@ class _loginPageState extends State<loginPage> {
                   SizedBox(
                     //height: 5,
                     child: Container(
-                   //   height: double.infinity,
+                      //   height: double.infinity,
                       padding: const EdgeInsets.all(15),
                       decoration: const BoxDecoration(
                         color: Colors.white,
@@ -96,7 +96,7 @@ class _loginPageState extends State<loginPage> {
                             decoration: InputDecoration(
                               labelText: "Email",
                               prefixIcon:
-                                  const Icon(Icons.email, color: Colors.orange),
+                              const Icon(Icons.email, color: Colors.orange),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
@@ -108,7 +108,7 @@ class _loginPageState extends State<loginPage> {
                             decoration: InputDecoration(
                               labelText: "Password",
                               prefixIcon:
-                                  const Icon(Icons.lock, color: Colors.orange),
+                              const Icon(Icons.lock, color: Colors.orange),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),

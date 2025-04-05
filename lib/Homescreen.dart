@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:sahara_homepage/Donationscreens.dart';
 import 'package:sahara_homepage/morescreen.dart';
 import 'package:sahara_homepage/postscreen.dart';
 import 'functions.dart';
@@ -120,11 +121,18 @@ class Homepage extends StatelessWidget {
                   Row(
                     children: [
                       Spacer(),
-                      functions.container(Icons.fastfood, Colors.orange.shade400, 'Food', () {}),
+                      functions.container(Icons.fastfood, Colors.orange.shade400, 'Food', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateFoodScreen()));
+                      }),
                       Spacer(),
-                      functions.container(Icons.monetization_on_outlined, Colors.orange.shade400, 'Money', () {}),
+                      functions.container(Icons.monetization_on_outlined, Colors.orange.shade400, 'Money', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateMoneyScreen()));
+
+                      }),
                       Spacer(),
-                      functions.container(Icons.cyclone_outlined, Colors.orange.shade400, 'Clothing', () {}),
+                      functions.container(Icons.cyclone_outlined, Colors.orange.shade400, 'Clothing', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateClothScreen()));
+                      }),
                       Spacer(),
                     ],
                   ),
@@ -132,11 +140,17 @@ class Homepage extends StatelessWidget {
                   Row(
                     children: [
                       Spacer(),
-                      functions.container(Icons.menu_book_rounded, Colors.orange.shade400, 'Education', () {}),
+                      functions.container(Icons.menu_book_rounded, Colors.orange.shade400, 'Education', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateStationaryScreen()));
+                      }),
                       Spacer(),
-                      functions.container(Icons.medical_information_outlined, Colors.orange.shade400, 'Medical', () {}),
+                      functions.container(Icons.medical_information_outlined, Colors.orange.shade400, 'Medical', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateMedicalItemsScreen()));
+                      }),
                       Spacer(),
-                      functions.container(Icons.devices_other, Colors.orange.shade400, 'Other', () {}),
+                      functions.container(Icons.devices_other, Colors.orange.shade400, 'Other', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateItemScreen()));
+                      }),
                       Spacer(),
                     ],
                   ),
@@ -267,7 +281,7 @@ Widget colorfulContainer(BuildContext context, Color color, String text, Color t
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ImagePickerScreen()),
+                  MaterialPageRoute(builder: (context) =>  PostScreen()),
                 );
               },
               child: Text(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sahara_homepage/about%20us%20screen.dart';
-import 'package:sahara_homepage/main.dart';
-import 'package:sahara_homepage/most%20asked%20question%20screen.dart';
 import 'package:sahara_homepage/privacy%20screen.dart';
 import 'package:sahara_homepage/terms%20and%20condition%20screen.dart';
+import 'about us screen.dart';
+import 'feedback & rating.dart';
+import 'loginpage.dart';
+import 'main.dart';
+import 'most asked question screen.dart'; // <-- Make sure this is your actual login screen path
 
 class Profilescreen extends StatefulWidget {
   const Profilescreen({super.key});
@@ -42,13 +44,34 @@ class _ProfileState extends State<Profilescreen> {
     }
   }
 
-  Future<void> signOutUser() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.pushReplacementNamed(context, '/login');
-    } catch (e) {
-      print("Error signing out: $e");
-    }
+  // Method to show the logout confirmation dialog
+  Future<void> _showLogoutDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Logout Confirmation'),
+        content: Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog if No is clicked
+            },
+            child: Text('No'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop(); // Close the dialog first
+              await FirebaseAuth.instance.signOut(); // Sign out the user
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => loginPage()), // Navigate to login screen
+              );
+            },
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -58,7 +81,6 @@ class _ProfileState extends State<Profilescreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -71,27 +93,26 @@ class _ProfileState extends State<Profilescreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Column(
-                  children: [SizedBox(height: 20,),
+                  children: [
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CircleAvatar(
                           radius: 35,
-                        backgroundImage: AssetImage('assets/images/logo zoom.jpg'),
+                          backgroundImage: AssetImage('assets/images/logo zoom.jpg'),
                           backgroundColor: Colors.white,
-
-                          //child: Icon(Icons.person, size: 50, color: Colors.orange.shade300),
                         ),
                         SizedBox(width: 15),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(height: 10,),
                             Text(
-                              '\n'
-                                  'CHARITY MATE',
+                              'CHARITY MATE',
                               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
-                            SizedBox(height: 5),
+                            SizedBox(height: 3),
                             Text(
                               userName,
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
@@ -130,7 +151,7 @@ class _ProfileState extends State<Profilescreen> {
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
               child: Container(
@@ -143,7 +164,7 @@ class _ProfileState extends State<Profilescreen> {
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage())),
                   child: ListTile(
                     title: Text('Home'),
-                    leading: Icon(Icons.home_sharp,color: Colors.orangeAccent,),
+                    leading: Icon(Icons.home_sharp, color: Colors.black),
                   ),
                 ),
               ),
@@ -186,6 +207,13 @@ class _ProfileState extends State<Profilescreen> {
                         leading: Icon(Icons.question_mark),
                       ),
                     ),
+                    InkWell(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackScreen())),
+                      child: ListTile(
+                        title: Text('Rating & Feedback'),
+                        leading: Icon(Icons.feedback_outlined),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -199,7 +227,7 @@ class _ProfileState extends State<Profilescreen> {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: InkWell(
-                  onTap: signOutUser,
+                  onTap: () => _showLogoutDialog(context), // Show dialog on Logout button click
                   child: ListTile(
                     title: Text('Logout'),
                     leading: Icon(Icons.logout),

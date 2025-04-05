@@ -15,6 +15,8 @@ void main() async {
           appId: '1:129550855747:android:c824144550d988bee0eef6',
           messagingSenderId: "129550855747",
           projectId: "charitymate-bc611"));
+  // 🟢 Initialize Supabase
+
   runApp(MyApp());
 }
 
@@ -48,8 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int current_index = 0;
   final screen = [
     Homepage(),
-    searchscreen(),
-    ImagePickerScreen(),
+    SearchScreen(),
+    PostScreen(),
     Profilescreen()
   ];
 
