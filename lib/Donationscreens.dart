@@ -1,27 +1,18 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class donateitemscreen extends StatelessWidget {
-  final File image;
-  final String name;
-  final String location;
-  final String description;
-
-  donateitemscreen({
-    required this.image,
-    required this.name,
-    required this.location,
-    required this.description,
-  });
-
+class DonateFoodScreen extends StatelessWidget {
+  const DonateFoodScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final image = File('path_to_image'); // Example of hardcoded image
+    final name = "Item Name";
+    final location = "Item Location";
+    final description = "Item Description";
     return Scaffold(
       appBar: AppBar(
-        title: Text('Donate Items '),
+        title: Text('Donate Items'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,26 +30,18 @@ class donateitemscreen extends StatelessWidget {
   }
 }
 
-class donatemoneyscreen extends StatelessWidget {
-  final File image;          //stateless widget ma data dosry page/class se a raha hota ha and us ko name location etc
-                                  //ye chezain chaye jo k dosri class provide kr rai ha is lye final or required lekhy
-  final String name;
-  final String location;
-  final String description;
-
-  donatemoneyscreen({
-    required this.image,
-    required this.name,
-    required this.location,
-    required this.description,
-  });
-
-
+class DonateItemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // You can fetch this data from a service or other provider
+    final image = File('path_to_image'); // Example of hardcoded image
+    final name = "Item Name";
+    final location = "Item Location";
+    final description = "Item Description";
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('donate money '),
+        title: Text('Donate Items'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -76,24 +59,18 @@ class donatemoneyscreen extends StatelessWidget {
   }
 }
 
-class donatestationaryscreen extends StatelessWidget {
-   final File image;
-  final String name;
-  final String location;
-  final String description;
-
-   donatestationaryscreen({
-    required this.image,
-    required this.name,
-    required this.location,
-    required this.description,
-  });
-
+class DonateMoneyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // You can fetch this data from a service or other provider
+    final image = File('path_to_image'); // Example of hardcoded image
+    final name = "Money Donation";
+    final location = "Donation Location";
+    final description = "Monetary donations for charity";
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('donate Stationary '),
+        title: Text('Donate Money'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -111,24 +88,18 @@ class donatestationaryscreen extends StatelessWidget {
   }
 }
 
-class donateclothscreen extends StatelessWidget {
-  final File image;
-  final String name;
-  final String location;
-  final String description;
-
-  donateclothscreen({
-    required this.image,
-    required this.name,
-    required this.location,
-    required this.description,
-  });
-
+class DonateStationaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // You can fetch this data from a service or other provider
+    final image = File('path_to_image'); // Example of hardcoded image
+    final name = "Stationary Item";
+    final location = "Stationary Location";
+    final description = "Description of the stationary item";
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('donate clothes '),
+        title: Text('Donate Stationary'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -146,24 +117,18 @@ class donateclothscreen extends StatelessWidget {
   }
 }
 
-class donatemedicalitems extends StatelessWidget {
-  final File image;
-  final String name;
-  final String location;
-  final String description;
-
-  donatemedicalitems({
-    required this.image,
-    required this.name,
-    required this.location,
-    required this.description,
-  });
-
+class DonateClothScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // You can fetch this data from a service or other provider
+    final image = File('path_to_image'); // Example of hardcoded image
+    final name = "Clothing Item";
+    final location = "Clothing Donation Location";
+    final description = "Description of the clothing item";
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('donate medical items '),
+        title: Text('Donate Clothes'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -181,24 +146,47 @@ class donatemedicalitems extends StatelessWidget {
   }
 }
 
-class otherdonation extends StatelessWidget {
-  final File image;          //  final ensures the variables cannot change once set
-  final String name;
-  final String location;
-  final String description;
-
-  otherdonation({
-    required this.image,        ///required this.image forces the caller to pass data, preventing missing values
-    required this.name,
-    required this.location,
-    required this.description,
-  });
-
+class DonateMedicalItemsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // You can fetch this data from a service or other provider
+    final image = File('path_to_image'); // Example of hardcoded image
+    final name = "Medical Item";
+    final location = "Medical Donation Location";
+    final description = "Description of the medical item";
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('other screen'),
+        title: Text('Donate Medical Items'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Image.file(image, height: 150, width: 150, fit: BoxFit.cover),
+            SizedBox(height: 10),
+            Text("Name: $name"),
+            Text("Location: $location"),
+            Text("Description: $description"),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class OtherDonationScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // You can fetch this data from a service or other provider
+    final image = File('path_to_image'); // Example of hardcoded image
+    final name = "Other Donation Item";
+    final location = "Other Donation Location";
+    final description = "Description of other donation";
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Other Donations'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

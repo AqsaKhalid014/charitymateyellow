@@ -7,7 +7,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Terms & Conditions',
-          style: TextStyle(color: Colors.white),
+         // style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.orange.shade400,
       ),

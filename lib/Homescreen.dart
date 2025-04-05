@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:sahara_homepage/Donationscreens.dart';
 import 'package:sahara_homepage/morescreen.dart';
 import 'package:sahara_homepage/postscreen.dart';
 import 'functions.dart';
@@ -26,29 +27,34 @@ class Homepage extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/logo image.jpeg'),
-                  radius: 35,
-                ),
-                Text(
-                  'CHARITY MATE',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.more_vert, color: Colors.white, size: 30),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ProfileMoreScreen()),
-                    );
-                  },
+                SizedBox(height: 59,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/logo zoom.jpg'),
+                      radius: 25,
+                    ),
+                    Text(
+                      'CHARITY MATE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.more_vert, color: Colors.white, size: 30),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ProfileMoreScreen()),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -59,7 +65,7 @@ class Homepage extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
               child: Container(
                 height: 210,
                 width: double.infinity,
@@ -81,11 +87,11 @@ class Homepage extends StatelessWidget {
                     ),
                     Container(
                       padding: EdgeInsets.all(5),
-                      color: Colors.orange.withOpacity(0.5),
+                      color: Colors.black.withOpacity(0.4),
                       child: Text(
-                        'Give a little, help a lot – your donation can change a life!',
+                        ' Your donation can change a life!',
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -95,7 +101,7 @@ class Homepage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 3),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -108,18 +114,25 @@ class Homepage extends StatelessWidget {
                 children: [
                   SizedBox(height: 15),
                   Text(
-                    '      Categories:',
+                    '      Categories',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
                   Row(
                     children: [
                       Spacer(),
-                      functions.container(Icons.fastfood, Colors.orange.shade400, 'Food', () {}),
+                      functions.container(Icons.fastfood, Colors.orange.shade400, 'Food', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateFoodScreen()));
+                      }),
                       Spacer(),
-                      functions.container(Icons.monetization_on_outlined, Colors.orange.shade400, 'Money', () {}),
+                      functions.container(Icons.monetization_on_outlined, Colors.orange.shade400, 'Money', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateMoneyScreen()));
+
+                      }),
                       Spacer(),
-                      functions.container(Icons.cyclone_outlined, Colors.orange.shade400, 'Clothing', () {}),
+                      functions.container(Icons.cyclone_outlined, Colors.orange.shade400, 'Clothing', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateClothScreen()));
+                      }),
                       Spacer(),
                     ],
                   ),
@@ -127,17 +140,71 @@ class Homepage extends StatelessWidget {
                   Row(
                     children: [
                       Spacer(),
-                      functions.container(Icons.menu_book_rounded, Colors.orange.shade400, 'Education', () {}),
+                      functions.container(Icons.menu_book_rounded, Colors.orange.shade400, 'Education', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateStationaryScreen()));
+                      }),
                       Spacer(),
-                      functions.container(Icons.medical_information_outlined, Colors.orange.shade400, 'Medical', () {}),
+                      functions.container(Icons.medical_information_outlined, Colors.orange.shade400, 'Medical', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateMedicalItemsScreen()));
+                      }),
                       Spacer(),
-                      functions.container(Icons.devices_other, Colors.orange.shade400, 'Other', () {}),
+                      functions.container(Icons.devices_other, Colors.orange.shade400, 'Other', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateItemScreen()));
+                      }),
                       Spacer(),
                     ],
                   ),
-                  SizedBox(height: 12),
+                    SizedBox(height: 15,),
+                   Container(
+                    width: double.infinity,
+                    color: Colors.orange.shade50,
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Welcome to Charity Mate',
+                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Start Your Donation Journey',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 10),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Wrap(
+                              spacing: 1, // Space between containers
+                              children: [
+                                colorfulContainer(
+                                  context,
+                                  Colors.orange.shade500,
+                                  "\nWe make a living by what we get, but we make a life by what we give.",
+                                  Colors.black,
+                                ),
+                                colorfulContainer(
+                                  context,
+                                  Colors.pinkAccent.shade200,
+                                  "\nThe meaning of life is to find your gift. The purpose of life is to give it away.",
+                                  Colors.black,
+                                ),
+                                colorfulContainer(
+                                  context,
+                                  Colors.yellow,
+                                  "Charity begins at home, but it should not end there.",
+                                  Colors.black,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),  SizedBox(height: 12),
                   Text(
-                    '     Start Donating:',
+                    '     Start Donation',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 12),
@@ -171,55 +238,6 @@ class Homepage extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
 
-                  // New Section with Welcome Text and Donation Quotes
-                  Container(
-                    width: double.infinity,
-                    color: Colors.orange.shade50,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Welcome to Charity Mate',
-                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Start Your Donation Journey',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 10),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Wrap(
-                              spacing: 10, // Space between containers
-                              children: [
-                                colorfulContainer(
-                                  context,
-                                  Colors.orange.shade500,
-                                  "\nWe make a living by what we get, but we make a life by what we give.",
-                                  Colors.black,
-                                ),
-                                colorfulContainer(
-                                  context,
-                                  Colors.pinkAccent.shade200,
-                                  "\nThe meaning of life is to find your gift. The purpose of life is to give it away.",
-                                  Colors.black,
-                                ),
-                                colorfulContainer(
-                                  context,
-                                  Colors.yellow,
-                                  "Charity begins at home, but it should not end there.",
-                                  Colors.black,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
                 ],
               ),
             ),
@@ -259,11 +277,11 @@ Widget colorfulContainer(BuildContext context, Color color, String text, Color t
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 7),
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.black,foregroundColor:Colors.white ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,foregroundColor:Colors.white ),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ImagePickerScreen()),
+                  MaterialPageRoute(builder: (context) =>  PostScreen()),
                 );
               },
               child: Text(

@@ -14,7 +14,7 @@ class _FAQScreenState extends State<FAQScreen> {
       appBar: AppBar(
         title: Text(
           'Frequently Asked Questions',
-          style: TextStyle(color: Colors.white),
+        //  style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.orange.shade400,
       ),

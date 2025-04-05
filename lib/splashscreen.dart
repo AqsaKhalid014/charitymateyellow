@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:sahara_homepage/loginpage.dart';
 import 'package:sahara_homepage/welcome%20screen.dart';
 
+import 'chech login.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -17,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => loginPage()),
+        MaterialPageRoute(builder: (context) => checkuserloginstatus()),
       );
     });
   }
