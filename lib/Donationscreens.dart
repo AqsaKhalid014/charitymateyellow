@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class DonateFoodScreen extends StatelessWidget {
@@ -6,25 +7,85 @@ class DonateFoodScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = File('path_to_image'); // Example of hardcoded image
-    final name = "Item Name";
-    final location = "Item Location";
-    final description = "Item Description";
     return Scaffold(
       appBar: AppBar(
-        title: Text('Donate Items'),
+        title: Text('Donate Food'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.file(image, height: 150, width: 150, fit: BoxFit.cover),
-            SizedBox(height: 10),
-            Text("Name: $name"),
-            Text("Location: $location"),
-            Text("Description: $description"),
-          ],
-        ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('Food').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Something went wrong'));
+          }
+
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          var docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            return Center(child: Text('No items to display.'));
+          }
+
+          return GridView.count(
+            crossAxisCount: 3,
+            children: List.generate(docs.length, (index) {
+              var data = docs[index];
+              var imageUrl = data['image_url'];
+              var productName = data['product_name'];
+              var location = data['location'];
+              var description = data['description'];
+
+              return GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(imageUrl),
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  "Name: $productName",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text("Location: $location"),
+                                Text("Description: $description"),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }
@@ -33,56 +94,174 @@ class DonateFoodScreen extends StatelessWidget {
 class DonateItemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // You can fetch this data from a service or other provider
-    final image = File('path_to_image'); // Example of hardcoded image
-    final name = "Item Name";
-    final location = "Item Location";
-    final description = "Item Description";
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Donate Items'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.file(image, height: 150, width: 150, fit: BoxFit.cover),
-            SizedBox(height: 10),
-            Text("Name: $name"),
-            Text("Location: $location"),
-            Text("Description: $description"),
-          ],
-        ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('other item').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Something went wrong'));
+          }
+
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          var docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            return Center(child: Text('No items to display.'));
+          }
+
+          return GridView.count(
+            crossAxisCount: 3,
+            children: List.generate(docs.length, (index) {
+              var data = docs[index];
+              var imageUrl = data['image_url'];
+              var productName = data['product_name'];
+              var location = data['location'];
+              var description = data['description'];
+
+              return GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(imageUrl),
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  "Name: $productName",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text("Location: $location"),
+                                Text("Description: $description"),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }
 }
 
-class DonateMoneyScreen extends StatelessWidget {
+class DonateFurnitureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // You can fetch this data from a service or other provider
-    final image = File('path_to_image'); // Example of hardcoded image
-    final name = "Money Donation";
-    final location = "Donation Location";
-    final description = "Monetary donations for charity";
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Donate Money'),
+        title: Text('Donate Furniture'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.file(image, height: 150, width: 150, fit: BoxFit.cover),
-            SizedBox(height: 10),
-            Text("Name: $name"),
-            Text("Location: $location"),
-            Text("Description: $description"),
-          ],
-        ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('Furniture').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Something went wrong'));
+          }
+
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          var docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            return Center(child: Text('No items to display.'));
+          }
+
+          return GridView.count(
+            crossAxisCount: 3,
+            children: List.generate(docs.length, (index) {
+              var data = docs[index];
+              var imageUrl = data['image_url'];
+              var productName = data['product_name'];
+              var location = data['location'];
+              var description = data['description'];
+
+              return GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(imageUrl),
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  "Name: $productName",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text("Location: $location"),
+                                Text("Description: $description"),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }
@@ -91,27 +270,86 @@ class DonateMoneyScreen extends StatelessWidget {
 class DonateStationaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // You can fetch this data from a service or other provider
-    final image = File('path_to_image'); // Example of hardcoded image
-    final name = "Stationary Item";
-    final location = "Stationary Location";
-    final description = "Description of the stationary item";
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Donate Stationary'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.file(image, height: 150, width: 150, fit: BoxFit.cover),
-            SizedBox(height: 10),
-            Text("Name: $name"),
-            Text("Location: $location"),
-            Text("Description: $description"),
-          ],
-        ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('Stationary').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Something went wrong'));
+          }
+
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          var docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            return Center(child: Text('No items to display.'));
+          }
+
+          return GridView.count(
+            crossAxisCount: 3,
+            children: List.generate(docs.length, (index) {
+              var data = docs[index];
+              var imageUrl = data['image_url'];
+              var productName = data['product_name'];
+              var location = data['location'];
+              var description = data['description'];
+
+              return GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(imageUrl),
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  "Name: $productName",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text("Location: $location"),
+                                Text("Description: $description"),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }
@@ -120,27 +358,86 @@ class DonateStationaryScreen extends StatelessWidget {
 class DonateClothScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // You can fetch this data from a service or other provider
-    final image = File('path_to_image'); // Example of hardcoded image
-    final name = "Clothing Item";
-    final location = "Clothing Donation Location";
-    final description = "Description of the clothing item";
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Donate Clothes'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.file(image, height: 150, width: 150, fit: BoxFit.cover),
-            SizedBox(height: 10),
-            Text("Name: $name"),
-            Text("Location: $location"),
-            Text("Description: $description"),
-          ],
-        ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('clothes').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Something went wrong'));
+          }
+
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          var docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            return Center(child: Text('No items to display.'));
+          }
+
+          return GridView.count(
+            crossAxisCount: 3,
+            children: List.generate(docs.length, (index) {
+              var data = docs[index];
+              var imageUrl = data['image_url'];
+              var productName = data['product_name'];
+              var location = data['location'];
+              var description = data['description'];
+
+              return GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(imageUrl),
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  "Name: $productName",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text("Location: $location"),
+                                Text("Description: $description"),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }
@@ -149,56 +446,86 @@ class DonateClothScreen extends StatelessWidget {
 class DonateMedicalItemsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // You can fetch this data from a service or other provider
-    final image = File('path_to_image'); // Example of hardcoded image
-    final name = "Medical Item";
-    final location = "Medical Donation Location";
-    final description = "Description of the medical item";
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Donate Medical Items'),
+        title: Text('Donate MedicalItems'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.file(image, height: 150, width: 150, fit: BoxFit.cover),
-            SizedBox(height: 10),
-            Text("Name: $name"),
-            Text("Location: $location"),
-            Text("Description: $description"),
-          ],
-        ),
-      ),
-    );
-  }
-}
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('medical').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Something went wrong'));
+          }
 
-class OtherDonationScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // You can fetch this data from a service or other provider
-    final image = File('path_to_image'); // Example of hardcoded image
-    final name = "Other Donation Item";
-    final location = "Other Donation Location";
-    final description = "Description of other donation";
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Other Donations'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.file(image, height: 150, width: 150, fit: BoxFit.cover),
-            SizedBox(height: 10),
-            Text("Name: $name"),
-            Text("Location: $location"),
-            Text("Description: $description"),
-          ],
-        ),
+          var docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            return Center(child: Text('No items to display.'));
+          }
+
+          return GridView.count(
+            crossAxisCount: 3,
+            children: List.generate(docs.length, (index) {
+              var data = docs[index];
+              var imageUrl = data['image_url'];
+              var productName = data['product_name'];
+              var location = data['location'];
+              var description = data['description'];
+
+              return GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(imageUrl),
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  "Name: $productName",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text("Location: $location"),
+                                Text("Description: $description"),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }

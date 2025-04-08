@@ -24,47 +24,17 @@ class welcomescreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Lottie.asset(
-                'assets/animationlottie/loginpage animation.json',
+              Image.asset(
+                'assets/images/logo image.jpeg',
                 fit: BoxFit.fill,
                 height: 400,
                 width: double.infinity,
-                repeat: true,
+               // repeat: true,
               ),
-              _buildButton("LOG IN", Colors.orange.shade400, Colors.white, () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => loginPage()),
-                );
-              }),
-              SizedBox(height: 20),
-              _buildButton("SIGN UP", Colors.orange.shade400, Colors.white, () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => signuppage()),
-                );
-              }),
-              SizedBox(height: 20),
+
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildButton(
-      String text, Color bgColor, Color textColor, VoidCallback onPressed) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: bgColor,
-          minimumSize: Size(double.infinity, 50),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-        ),
-        onPressed: onPressed,
-        child: Text(text, style: TextStyle(color: textColor, fontSize: 18)),
       ),
     );
   }
