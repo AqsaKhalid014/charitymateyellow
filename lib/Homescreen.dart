@@ -125,8 +125,8 @@ class Homepage extends StatelessWidget {
                         Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateFoodScreen()));
                       }),
                       Spacer(),
-                      functions.container(Icons.monetization_on_outlined, Colors.orange.shade400, 'Money', () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateMoneyScreen()));
+                      functions.container(Icons.bedroom_parent_rounded, Colors.orange.shade400, 'Furniture', () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> DonateFurnitureScreen()));
 
                       }),
                       Spacer(),
