@@ -20,8 +20,9 @@ class _PostScreenState extends State<PostScreen> {
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   String _selectedCategory = 'other item'; // Default category
+  bool _isLoading = false; // ✅ Prevent double upload
 
-  // Function to pick an image
+  // Image picker
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
@@ -31,7 +32,6 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
-  // Show dialog for image selection
   void _showImageSourceDialog() {
     showModalBottomSheet(
       context: context,
@@ -60,14 +60,13 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  // Cloudinary Image upload function
+  // Upload image to Cloudinary
   Future<String?> _uploadImageToCloudinary(File imageFile) async {
     try {
-      final cloudName = 'dyontgtbu'; // 🟢 Apne Cloudinary ka naam yahan likhein
-      final uploadPreset = 'charitypresent'; // 🟢 Apne Cloudinary preset ka naam
+      final cloudName = 'dyontgtbu';
+      final uploadPreset = 'charitypresent';
 
       final url = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
-
       final mimeType = lookupMimeType(imageFile.path)!.split('/');
 
       final request = http.MultipartRequest('POST', url)
@@ -83,7 +82,7 @@ class _PostScreenState extends State<PostScreen> {
       if (response.statusCode == 200) {
         final res = await http.Response.fromStream(response);
         final data = jsonDecode(res.body);
-        return data['secure_url']; // 🎉 Cloudinary URL mil gaya
+        return data['secure_url'];
       } else {
         print('Failed to upload image. Status: ${response.statusCode}');
         return null;
@@ -94,8 +93,10 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
-  // Function to upload post data to Firestore
+  // Upload all data to Firestore
   Future<void> _uploadPostData() async {
+    if (_isLoading) return; // ✅ Prevent double tap
+
     if (_selectedImage == null ||
         _productNameController.text.isEmpty ||
         _locationController.text.isEmpty ||
@@ -106,12 +107,17 @@ class _PostScreenState extends State<PostScreen> {
       return;
     }
 
-    try {
-      // Upload image to Cloudinary
-      String? imageUrl = await _uploadImageToCloudinary(_selectedImage!);
-      if (imageUrl == null) return;
+    setState(() {
+      _isLoading = true;
+    });
 
-      // Save data to Firestore under the selected category
+    try {
+      String? imageUrl = await _uploadImageToCloudinary(_selectedImage!);
+      if (imageUrl == null) {
+        setState(() => _isLoading = false);
+        return;
+      }
+
       await FirebaseFirestore.instance.collection(_selectedCategory).add({
         "product_name": _productNameController.text,
         "location": _locationController.text,
@@ -122,16 +128,17 @@ class _PostScreenState extends State<PostScreen> {
 
      showThankYouDialog(context);
 
-      // Clear fields after posting
       setState(() {
         _selectedImage = null;
         _productNameController.clear();
         _locationController.clear();
         _descriptionController.clear();
-        _selectedCategory = 'other item'; // Reset category to default
+        _selectedCategory = 'other item';
+        _isLoading = false;
       });
     } catch (e) {
       print("Firestore upload error: $e");
+      setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to upload post. Please try again.")),
       );
@@ -218,16 +225,14 @@ class _PostScreenState extends State<PostScreen> {
                 items: [
                   "other item",
                   "Food",
-                  "money",
+                  "Furniture",
                   "Stationery",
                   "clothes",
                   "medical"
-                ]
-                    .map((category) => DropdownMenuItem<String>(
+                ].map((category) => DropdownMenuItem<String>(
                   value: category,
                   child: Text(category),
-                ))
-                    .toList(),
+                )).toList(),
               ),
               SizedBox(height: 20),
               SizedBox(
@@ -238,7 +243,9 @@ class _PostScreenState extends State<PostScreen> {
                     backgroundColor: Colors.orange,
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
-                  child: Text("Post", style: TextStyle(color: Colors.white)),
+                  child: _isLoading
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Text("Post", style: TextStyle(color: Colors.white)),
                 ),
               ),
               const SizedBox(height: 50),
