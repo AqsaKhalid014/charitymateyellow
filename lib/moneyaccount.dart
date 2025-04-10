@@ -2,6 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sahara_homepage/Homescreen.dart';
+import 'package:sahara_homepage/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class JazzCashPage extends StatelessWidget {
@@ -32,8 +34,20 @@ class JazzCashPage extends StatelessWidget {
             ElevatedButton(
               onPressed: _launchJazzCash,
               child: Text("Open JazzCash App",style: TextStyle(color: Colors.white),),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent)),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent)
+            ),
           ),
+          const SizedBox(height: 20,),
+          ElevatedButton(style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.orangeAccent,
+            foregroundColor:Colors.white,///its a text color
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          ),//MaterialPageRoute(builder: (_) => MoneyDonationPage()
+           onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_)=>MyHomePage()) );
+           }, child: const Text("Go to Home",style: TextStyle(fontSize: 15),), ),
         ],
       ),
     );
@@ -69,6 +83,17 @@ class EasyPaisaPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange,),
             ),
           ),
+          const SizedBox(height: 20,),
+          ElevatedButton(style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.orangeAccent,
+            foregroundColor:Colors.white,///its a text color
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          ),//MaterialPageRoute(builder: (_) => MoneyDonationPage()
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (_)=>MyHomePage()) );
+            }, child: const Text("Go to Home",style: TextStyle(fontSize: 15),), ),
         ],
       ),
     );
