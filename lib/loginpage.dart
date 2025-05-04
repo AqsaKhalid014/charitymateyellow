@@ -6,7 +6,22 @@ import 'package:sahara_homepage/Homescreen.dart';
 import 'package:sahara_homepage/main.dart';
 import 'package:sahara_homepage/signup%20screen.dart';
 import 'functions.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+void saveFcmToken() async {
+  final user = FirebaseAuth.instance.currentUser;
+  await FirebaseMessaging.instance.requestPermission(); //  request permission
+  if (user != null) {
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      await FirebaseFirestore.instance.collection('user').doc(user.uid).set({
+        'fcmToken': token,
+      }, SetOptions(merge: true)); // merge keeps other fields intact
+      print(" FCM token saved: $token");
+    }
+  }
+}
 class loginPage extends StatefulWidget {
   @override
   _loginPageState createState() => _loginPageState();
@@ -24,6 +39,7 @@ class _loginPageState extends State<loginPage> {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      saveFcmToken(); // Save token after login
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => MyHomePage()));
     } on FirebaseAuthException catch (ex) {
@@ -124,8 +140,10 @@ class _loginPageState extends State<loginPage> {
                                     borderRadius: BorderRadius.circular(10)),
                               ),
                               onPressed: () {
+
                                 login(emailController.text,
                                     passwordController.text);
+
                               },
                               child: const Text(
                                 "LOGIN",
@@ -143,6 +161,7 @@ class _loginPageState extends State<loginPage> {
                               const Text("Don't have an account?"),
                               TextButton(
                                 onPressed: () {
+
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -187,3 +206,5 @@ class _loginPageState extends State<loginPage> {
     );
   }
 }
+//its an fcm code ..>"private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCO2budQ7KJxKVV\nfw+I/bPX4xeEsEex7utXBYiwovCT5a0wHAEuBwK7FR5zxRwnyJvQ/TffUNU3Ffw7\nj2U5X+/GKhaEtO8Ig3p34M5pK7N7Dcw/PttCaFmovlBrKNeJfKMIl7cxUSUuDK+0\n6354PP3MiouClq+ZinfI/gCsGs/IzEnEsbasf4DeHCLmNb/Up9+8fjVTONv76Dfh\no065swP9fvBBbbE/X8U/jMysnL+c2JU2NtjCjbwl5vRxPIC/h6PTI7iG46d8Sb6h\nOCN9HsNcRq16PPrKIYn4q9Xh3xXDt4zY5c01JU3TyASfjlawKtIGkNzddtVG1Hf9\nuWu3VNLDAgMBAAECggEAAfBvZ+ghBqvBDtMQaUIAbKrW3o9CDzv4vTqvAK7a6Ixn\n+HeOMItvJw5XVnz+L9q8+sOlPDEtuSIMRYa3JLs/rFyqkkHz3hVi1o5vtDp1T54A\nACUgoYXRycT49IDJGZhejOGlCVSvq4YH5e3YeVYNSqHgLkqmDEXhRbzk/MZ0Zvu8\ncYoeasQuB0gl3gq6qQobYDsefsEsYCb9AeUsDGeVeQ71t+oBzTMwBGE+2XjNyGeZ\n/3Yz0YkmB1I6Jh6oGwLaFnDrzDdbGZ9IvgKpguImtPIHGi1o2+n3mDg7eDriOov/\n/pJsnrrJ4nB1ET5gLqBrxvRajWTLRjo6JWn875sTaQKBgQDFBsrIkxgpV5pr/BrZ\neRfl85MXp/I6nUy2pcmjcEQzwt2nav3vqhrK9RgI11Gkg5cDuNUKcUy3Ykw6vx+c\n5mZeebshTVwaYOUxhZLEaX5uGFXBEcY4qkSOaHE2e9IAXdOecdYYlhK72kjG5KYK\nznrD56zA2h9yptPcCPMUl7jmxQKBgQC5m7CncS/dlESSsxHHD0e6MPDakGs7mtV8\n83pYP9nkFzVY5FPUnF7QBTmdWzIwtzcX8iZy/BcJbLoM8m68z1vY4Tkjs8c+jtxv\n9e42oorer3GIgBqSjYuYbacxcRNgwpNNSnQrm+K5I4F+RZIKj+O70AKoH4lz+slZ\nlu4kBWur5wKBgAZ2sJRf7vz8OL6uKJtV06jhksPF6LZvjqK3UaQg/LvN+sORSP9h\nzzs1SzKPDcid4IhoueR7zw59FQ8gUgMts9IJoE/5X7olz58OSMBUzacC+V06Hgyh\n2VnqpzwoV71XVqfuCB4KXlb3VEfiHGhiWbivkwVIopt6SZ0AVikoyRIZAoGAElRV\ntbNvzqn9u58Demz/4FtE7dClRlWcD6LbyitEEUpZclXaEXz/v/tEHU4MPtNZFXxM\nX76VZ9Dc7rpiRTMVFu3m/qeaXYsuKcBXrf2PST56L8i21xIzXvI1OKS6DSwp79AS\neNwEH9RpzVaBfZmIG9wG5yN2J4X0rGxDSDtgzrECgYEApU0GY/V73PoyG1SWiyk0\nlHWwyZIMqMlueECGDeIZ0Pde8gH0FpVII2ypNvq8pctF0t5vy72y+O/P9bZ1DOZa\nGDe34RPj9bj62yliDYWyNajQiQL8Ou0agK7lp9lwkLa8TVUpEezXYZ73IKwL2cTf\ncn7rYHmqRAuniUiV12tboZc=\n-----END PRIVATE KEY-----\n",
+

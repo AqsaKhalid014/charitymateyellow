@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sahara_homepage/loginpage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class signuppage extends StatefulWidget {
   const signuppage({super.key});
@@ -56,8 +59,20 @@ class _signuppageState extends State<signuppage> {
         email: email,
         password: password,
       );
-      await userCredential.user?.updateDisplayName(name);
-      _showDialog("Signup Successful!", success: true);
+      User? user = userCredential.user;
+      if (user != null) {
+        await user.updateDisplayName(name);
+        await FirebaseFirestore.instance.collection('users personal data').doc(userCredential.user!.uid).set({
+          'uid': userCredential.user!.uid,
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'password':password,
+          'createdAt': FieldValue.serverTimestamp(), // Optional: For record keeping
+        });
+         saveFcmToken(); //
+        _showDialog("Signup Successful!", success: true);
+      }
     } on FirebaseAuthException catch (e) {
       _showDialog(e.message ?? "An error occurred.");
     } catch (e) {
@@ -87,7 +102,19 @@ class _signuppageState extends State<signuppage> {
       ),
     );
   }
-
+  void saveFcmToken() async {
+    final user = FirebaseAuth.instance.currentUser;
+    await FirebaseMessaging.instance.requestPermission(); //  request permission
+    if (user != null) {
+      final token = await FirebaseMessaging.instance.getToken();
+      if (token != null) {
+        await FirebaseFirestore.instance.collection('user').doc(user.uid).set({
+          'fcmToken': token,
+        }, SetOptions(merge: true)); // merge keeps other fields intact
+        print(" FCM token saved: $token");
+      }
+    }
+  } //function to save token of the user in firebase so that send notification to that user
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,6 +219,7 @@ class _signuppageState extends State<signuppage> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
+
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: _signUp,
@@ -199,6 +227,7 @@ class _signuppageState extends State<signuppage> {
                   backgroundColor: Colors.orangeAccent,
                   minimumSize: const Size(double.infinity, 50),
                 ),
+
                 child: const Text(
                   "CREATE ACCOUNT",
                   style: TextStyle(
@@ -207,9 +236,11 @@ class _signuppageState extends State<signuppage> {
                       fontSize: 17),
                 ),
               ),
+
               SizedBox(
                 height: 15,
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -231,6 +262,7 @@ class _signuppageState extends State<signuppage> {
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
                       ))
+
                 ],
               )
             ],

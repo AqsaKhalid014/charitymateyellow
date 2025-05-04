@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
-import 'package:mime/mime.dart';//to check datatype of pic in cloudinary
+import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 
-import 'donatemoney.dart';
 class PostScreen extends StatefulWidget {
   @override
   _PostScreenState createState() => _PostScreenState();
@@ -124,9 +124,12 @@ class _PostScreenState extends State<PostScreen> {
         "description": _descriptionController.text,
         "image_url": imageUrl,
         "timestamp": FieldValue.serverTimestamp(),
+        'donorId': FirebaseAuth.instance.currentUser!.uid,
       });
 
-     showThankYouDialog(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Post uploaded successfully!")),
+      );
 
       setState(() {
         _selectedImage = null;
@@ -248,75 +251,10 @@ class _PostScreenState extends State<PostScreen> {
                       : Text("Post", style: TextStyle(color: Colors.white)),
                 ),
               ),
-              const SizedBox(height: 50),
-              const Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      "OR",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                  Expanded(
-                    child: Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                    ),
-                  ),
-                ],
-              ),
-               SizedBox(height: 20,),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orangeAccent,
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: Text(
-                    'Donate Money',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => MoneyDonationPage()),
-                    );
-                  },
-                ),
-              ),
-
-
             ],
           ),
         ),
       ),
     );
   }
-}
-void showThankYouDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text("Thank You!"),
-      content: Text("Your donation has been submitted successfully."),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text("Go to Home"),
-        ),
-      ],
-    ),
-  );
 }

@@ -1,3 +1,7 @@
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sahara_homepage/postscreen.dart';
@@ -6,6 +10,11 @@ import 'Homescreen.dart';
 import 'profilescreen.dart';
 import 'searchscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'notification_service.dart';
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  debugPrint("Handling background message: ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +25,18 @@ void main() async {
           messagingSenderId: "129550855747",
           projectId: "charitymate-bc611"));
   // 🟢 Initialize Supabase
-
+  FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('user').doc(user.uid).set({
+        'fcmToken': newToken,
+      }, SetOptions(merge: true));
+      print(" FCM token refreshed and updated");
+    }
+  }
+  );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  //await NotificationService();
   runApp(MyApp());
 }
 
@@ -47,6 +67,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
+  void initState() {
+    super.initState();
+
+    NotificationService.initialize(context);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      debugPrint(" Message received in foreground:${message.notification?.title}");
+      NotificationService.showNotification(message);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      debugPrint(" App opened via notification");
+    });
+  }
+
+  @override
+
   int current_index = 0;
   final screen = [
     Homepage(),

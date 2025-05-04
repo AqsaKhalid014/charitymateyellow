@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sahara_homepage/privacy%20screen.dart';
 import 'package:sahara_homepage/terms%20and%20condition%20screen.dart';
 import 'about us screen.dart';
 import 'feedback & rating.dart';
 import 'loginpage.dart';
 import 'main.dart';
-import 'most asked question screen.dart'; // <-- Make sure this is your actual login screen path
+import 'most asked question screen.dart';
 
 class Profilescreen extends StatefulWidget {
   const Profilescreen({super.key});
@@ -17,34 +18,31 @@ class Profilescreen extends StatefulWidget {
 
 class _ProfileState extends State<Profilescreen> {
   String userName = "Loading...";
-  TextEditingController _nameController = TextEditingController();
+  String userEmail = "Loading...";
+  String userContact = "Loading...";
 
   @override
   void initState() {
     super.initState();
-    _loadUsername();
+    _loadUserData();
   }
 
-  void _loadUsername() {
-    User? user = FirebaseAuth.instance.currentUser;
-    setState(() {
-      userName = user?.displayName ?? "Unknown User";
-      _nameController.text = userName;
-    });
-  }
-
-  Future<void> _updateUsername() async {
+  void _loadUserData() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await user.updateDisplayName(_nameController.text);
-      await user.reload();
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users personal data')
+          .doc(user.uid)
+          .get();
+
       setState(() {
-        userName = _nameController.text;
+        userName = userDoc['name'] ?? "Unknown";
+        userEmail = userDoc['email'] ?? "No Email";
+        userContact = userDoc['phone'] ?? "No Contact";
       });
     }
   }
 
-  // Method to show the logout confirmation dialog
   Future<void> _showLogoutDialog(BuildContext context) async {
     showDialog(
       context: context,
@@ -53,18 +51,16 @@ class _ProfileState extends State<Profilescreen> {
         content: Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog if No is clicked
-            },
+            onPressed: () => Navigator.of(context).pop(),
             child: Text('No'),
           ),
           TextButton(
             onPressed: () async {
-              Navigator.of(context).pop(); // Close the dialog first
-              await FirebaseAuth.instance.signOut(); // Sign out the user
+              Navigator.of(context).pop();
+              await FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => loginPage()), // Navigate to login screen
+                MaterialPageRoute(builder: (context) => loginPage()),
               );
             },
             child: Text('Yes'),
@@ -85,7 +81,7 @@ class _ProfileState extends State<Profilescreen> {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.orange.shade300,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
@@ -107,41 +103,93 @@ class _ProfileState extends State<Profilescreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 10,),
+                            SizedBox(height: 10),
                             Text(
                               'CHARITY MATE',
                               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                             SizedBox(height: 3),
-                            Text(
-                              userName,
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
-                            ),
+                            Text(userName,
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white)),
+                            Text(userEmail,
+                                style: TextStyle(fontSize: 14, color: Colors.white)),
+                            Text("Contact: $userContact",
+                                style: TextStyle(fontSize: 14, color: Colors.white)),
+                            SizedBox(height: 5),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent.shade100),
                               onPressed: () {
                                 showDialog(
                                   context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text("Edit Name"),
-                                    content: TextField(controller: _nameController),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("Cancel"),
+                                  builder: (context) {
+                                    final TextEditingController _editNameController = TextEditingController(text: userName);
+                                    final TextEditingController _contactController = TextEditingController(text: userContact);
+
+                                    return AlertDialog(
+                                      title: Text("Edit Profile"),
+                                      content: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextField(
+                                              controller: _editNameController,
+                                              decoration: InputDecoration(labelText: "Edit Name"),
+                                            ),
+                                            TextField(
+                                              controller: _contactController,
+                                              decoration: InputDecoration(labelText: "Contact Number"),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          _updateUsername();
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Save"),
-                                      ),
-                                    ],
-                                  ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            User? user = FirebaseAuth.instance.currentUser;
+                                            try {
+                                              // Update name if changed
+                                              if (_editNameController.text.isNotEmpty && _editNameController.text != userName) {
+                                                await user?.updateDisplayName(_editNameController.text);
+                                                await FirebaseFirestore.instance
+                                                    .collection('users personal data')
+                                                    .doc(user?.uid)
+                                                    .update({'name': _editNameController.text});
+                                              }
+
+                                              // Update contact number if changed
+                                              if (_contactController.text.isNotEmpty && _contactController.text != userContact) {
+                                                await FirebaseFirestore.instance
+                                                    .collection('users personal data')
+                                                    .doc(user?.uid)
+                                                    .update({'phone': _contactController.text});
+                                              }
+
+                                              // Reload user data and show confirmation
+                                              await user?.reload();
+                                              _loadUserData();
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Profile updated successfully")),
+                                              );
+                                            } catch (e) {
+                                              Navigator.pop(context);
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Error: $e")),
+                                              );
+                                            }
+                                          },
+                                          child: Text("Save"),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                               },
-                              child: Text('Edit Name'),
+                              child: Text('Edit Profile'),
                             ),
                           ],
                         ),
@@ -152,91 +200,69 @@ class _ProfileState extends State<Profilescreen> {
               ),
             ),
             SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: InkWell(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage())),
-                  child: ListTile(
-                    title: Text('Home'),
-                    leading: Icon(Icons.home_sharp, color: Colors.black),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Column(
-                  children: [
-                    InkWell(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AboutUsScreen())),
-                      child: ListTile(
-                        title: Text('About Us'),
-                        leading: Icon(Icons.read_more_outlined),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TermsAndConditionsScreen())),
-                      child: ListTile(
-                        title: Text('Terms and Conditions'),
-                        leading: Icon(Icons.terminal_sharp),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyScreen())),
-                      child: ListTile(
-                        title: Text('Privacy Policy'),
-                        leading: Icon(Icons.privacy_tip_outlined),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FAQScreen())),
-                      child: ListTile(
-                        title: Text('FAQ'),
-                        leading: Icon(Icons.question_mark),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackScreen())),
-                      child: ListTile(
-                        title: Text('Rating & Feedback'),
-                        leading: Icon(Icons.feedback_outlined),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: InkWell(
-                  onTap: () => _showLogoutDialog(context), // Show dialog on Logout button click
-                  child: ListTile(
-                    title: Text('Logout'),
-                    leading: Icon(Icons.logout),
-                  ),
-                ),
-              ),
-            ),
+            buildTile(context, "Home", Icons.home_sharp, MyHomePage()),
+            buildSettingsSection(context),
+            buildTile(context, "Logout", Icons.logout, null, isLogout: true),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildTile(BuildContext context, String title, IconData icon, Widget? page, {bool isLogout = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: InkWell(
+          onTap: () {
+            if (isLogout) {
+              _showLogoutDialog(context);
+            } else if (page != null) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+            }
+          },
+          child: ListTile(
+            title: Text(title),
+            leading: Icon(icon, color: Colors.black),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildSettingsSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Column(
+          children: [
+            buildSettingsTile(context, 'About Us', Icons.read_more_outlined, AboutUsScreen()),
+            buildSettingsTile(context, 'Terms and Conditions', Icons.terminal_sharp, TermsAndConditionsScreen()),
+            buildSettingsTile(context, 'Privacy Policy', Icons.privacy_tip_outlined, PrivacyScreen()),
+            buildSettingsTile(context, 'FAQ', Icons.question_mark, FAQScreen()),
+            buildSettingsTile(context, 'Rating & Feedback', Icons.feedback_outlined, FeedbackScreen()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildSettingsTile(BuildContext context, String title, IconData icon, Widget page) {
+    return InkWell(
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => page)),
+      child: ListTile(
+        title: Text(title),
+        leading: Icon(icon),
       ),
     );
   }

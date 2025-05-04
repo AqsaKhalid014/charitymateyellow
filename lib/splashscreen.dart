@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sahara_homepage/loginpage.dart';
 import 'package:sahara_homepage/welcome%20screen.dart';
 
-import 'chech login.dart';
+import 'check login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
